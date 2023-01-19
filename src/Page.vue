@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import app from "@/app.vue";
+import app from "@/inApp.vue";
 export default {
   components: { app },
 };
