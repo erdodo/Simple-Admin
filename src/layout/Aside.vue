@@ -1,39 +1,31 @@
 <template>
   <div class="position-relative" :style="isCollapse ? 'width:65px' : 'width:230px'">
-    <el-menu default-active="2" style="height: 100vh" class="position-fixed" :collapse="isCollapse">
-      <el-sub-menu index="1">
+    <el-menu :default-active="$route.fullPath" router style="height: 100vh" class="position-fixed" :collapse="isCollapse">
+      <el-menu-item index="/">
+        <img src="/vendor/img/Simple.png" style="width: 25px" alt="" />
+        <template #title><span class="mx-3 fs-3">Simple</span></template>
+      </el-menu-item>
+      <el-sub-menu v-for="m in menu" :key="m.id">
         <template #title>
           <el-icon><location /></el-icon>
-          <span>Navigator One</span>
+          <span>{{ m.display }}</span>
         </template>
-        <el-menu-item-group>
-          <template #title><span>Group One</span></template>
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="Group Two">
-          <el-menu-item index="1-3">item three</el-menu-item>
-        </el-menu-item-group>
-        <el-sub-menu index="1-4">
-          <template #title><span>item four</span></template>
-          <el-menu-item index="1-4-1">item one</el-menu-item>
-        </el-sub-menu>
+
+        <el-menu-item v-for="t in m.table_name" :index="'/list/' + t.name" :key="t">
+          {{ t.display }}
+        </el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="2">
-        <el-icon><Menu /></el-icon>
-        <template #title>Navigator Two</template>
-      </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <el-icon><document /></el-icon>
-        <template #title>Navigator Three</template>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <el-icon><setting /></el-icon>
+
+      <el-menu-item v-if="isCollapse" @click="isCollapse = !isCollapse">
+        <i class="bi bi-arrow-right-square ms-1"></i>
         <template #title>
-          <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
-            <el-radio-button :label="false">expand</el-radio-button>
-            <el-radio-button :label="true">collapse</el-radio-button>
-          </el-radio-group>
+          <span class="ms-2">Menü'yü Aç</span>
+        </template>
+      </el-menu-item>
+      <el-menu-item v-else @click="isCollapse = !isCollapse">
+        <i class="bi bi-arrow-left-square ms-1"></i>
+        <template #title>
+          <span class="ms-3">Menü'yü Kapat</span>
         </template>
       </el-menu-item>
     </el-menu>
@@ -42,13 +34,20 @@
 
 <script>
 import { Document, Menu, Location, Setting } from "@element-plus/icons-vue";
-
+import services from "@/services";
 export default {
   components: { Document, Menu, Location, Setting },
   data() {
     return {
-      isCollapse: true,
+      isCollapse: false,
+      menu: {},
     };
+  },
+  mounted() {
+    console.log("asdf");
+    services.list("table_group").then((res) => {
+      this.menu = res.records;
+    });
   },
 };
 </script>
