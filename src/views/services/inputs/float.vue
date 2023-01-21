@@ -1,12 +1,10 @@
 <template>
   <div class="inputs-float">
-    <el-switch v-model="value" inline-prompt :active-icon="Check" :inactive-icon="Close" />
+    <el-input-number v-model="value" :precision="2" :step="1" controls-position="right" class="w-100" />
   </div>
 </template>
 
 <script>
-import { Check, Close } from "@element-plus/icons-vue";
-
 export default {
   props: ["modelValue", "clm"],
   data() {
@@ -26,10 +24,6 @@ export default {
     this.value = this.modelValue;
   },
   methods: {},
-  components: {
-    Check,
-    Close,
-  },
 };
 </script>
 

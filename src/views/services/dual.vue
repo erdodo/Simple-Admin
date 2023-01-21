@@ -8,11 +8,10 @@
     <template v-for="clm in columns" :key="clm.id">
       <inputs v-model="params[clm.name]" :label="true" :clm="clm"></inputs>
     </template>
-    {{ params }}
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false"> Confirm </el-button>
+        <el-button type="primary" @click="saveData()"> Confirm </el-button>
       </span>
     </template>
   </el-dialog>
@@ -50,6 +49,11 @@ export default {
         services.create(this.$route.params.table_name).then((res) => {
           this.columns = res.fields;
         });
+      }
+    },
+    saveData() {
+      if (this.config.type == "create") {
+        services.add(this.$route.params.table_name, this.params);
       }
     },
   },

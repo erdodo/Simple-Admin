@@ -3,10 +3,20 @@
     position: absolute;
     z-index: -1;
     opacity: 0.2;
-    background-image: url("/vendor/img/back1.jpg");
+    background-image: url("/vvendor/img/back1.jpg");
     
     width: 100vw;
     height:100vh;
     background-size: cover;
     background-position: center;
+}
+body{
+    width: 100vw;
+}
+html{
+    overflow: hidden;
+}
+
+.inputs-float .el-input-number .el-input__inner{
+    text-align: end !important;
 }

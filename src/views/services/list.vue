@@ -1,6 +1,11 @@
 <template>
   <div v-loading="loading">
-    <el-button type="primary" @click="addComponent()">Ekle</el-button>
+    <div class="d-flex justify-content-between my-3">
+      <span class="fs-3">
+        {{ table_data.table_info?.display }}
+      </span>
+      <el-button type="primary" @click="addComponent()">Ekle</el-button>
+    </div>
     <el-table :data="table_data.records" style="width: 100%" height="90vh" stripe default-expand-all lazy>
       <template v-for="clm in table_data.fields" :key="clm.id">
         <template v-if="columns_settings?.[clm.name]?.visible == false"></template>

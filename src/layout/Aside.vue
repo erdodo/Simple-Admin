@@ -44,9 +44,8 @@ export default {
     };
   },
   mounted() {
-    console.log("asdf");
-    services.list("table_group").then((res) => {
-      this.menu = res.records;
+    services.get_cache().then((res) => {
+      this.menu = res.table_group;
     });
   },
 };

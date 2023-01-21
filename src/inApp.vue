@@ -19,8 +19,13 @@
 <script>
 import Aside from "@/layout/Aside.vue";
 import Header from "./layout/Header.vue";
+
+import services from "@/services";
 export default {
   components: { Aside, Header },
+  mounted() {
+    services.get_cache();
+  },
 };
 </script>
 
