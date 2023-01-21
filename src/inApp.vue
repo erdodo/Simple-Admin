@@ -3,9 +3,9 @@
     <div class="">
       <el-container>
         <el-aside width="auto"><Aside></Aside></el-aside>
-        <el-container class="w-100">
+        <el-container class="w-100 container">
           <el-header><Header></Header></el-header>
-          <el-main v-if="true">
+          <el-main class="p-0" v-if="true">
             <router-view></router-view>
           </el-main>
           <el-footer>Footer</el-footer>

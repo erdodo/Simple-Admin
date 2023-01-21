@@ -1,5 +1,5 @@
 <template>
-  <div class="position-relative" :style="isCollapse ? 'width:65px' : 'width:230px'">
+  <div class="position-relative d-none d-md-block" :style="isCollapse ? 'width:65px' : 'width:230px'">
     <el-menu :default-active="$route.fullPath" router style="height: 100vh" class="position-fixed" :collapse="isCollapse">
       <el-menu-item index="/">
         <img src="/vendor/img/Simple.png" style="width: 25px" alt="" />
@@ -16,16 +16,16 @@
         </el-menu-item>
       </el-sub-menu>
 
-      <el-menu-item v-if="isCollapse" @click="isCollapse = !isCollapse">
-        <i class="bi bi-arrow-right-square ms-1"></i>
+      <el-menu-item v-if="isCollapse">
+        <i class="bi bi-arrow-right-square ms-1" @click="isCollapse = !isCollapse"></i>
         <template #title>
-          <span class="ms-2">Menü'yü Aç</span>
+          <span class="ms-2" @click="isCollapse = !isCollapse">Menü'yü Aç</span>
         </template>
       </el-menu-item>
-      <el-menu-item v-else @click="isCollapse = !isCollapse">
-        <i class="bi bi-arrow-left-square ms-1"></i>
+      <el-menu-item v-else>
+        <i class="bi bi-arrow-left-square ms-1" @click="isCollapse = !isCollapse"></i>
         <template #title>
-          <span class="ms-3">Menü'yü Kapat</span>
+          <span class="ms-3" @click="isCollapse = !isCollapse">Menü'yü Kapat</span>
         </template>
       </el-menu-item>
     </el-menu>
