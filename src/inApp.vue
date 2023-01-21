@@ -4,10 +4,10 @@
       <el-container>
         <el-aside width="auto"><Aside></Aside></el-aside>
         <el-container class="w-100 container">
-          <el-header><Header></Header></el-header>
-          <el-main class="p-0" v-if="true">
-            <router-view></router-view>
-          </el-main>
+          <Header></Header>
+
+          <router-view></router-view>
+
           <el-footer>Footer</el-footer>
         </el-container>
         <el-aside v-if="false" width="auto">Right side</el-aside>
@@ -23,6 +23,9 @@ import Header from "./layout/Header.vue";
 import services from "@/services";
 export default {
   components: { Aside, Header },
+  data() {
+    return {};
+  },
   mounted() {
     services.get_cache();
   },

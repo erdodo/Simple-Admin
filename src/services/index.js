@@ -7,7 +7,7 @@ const base_url = "https://backend.erdoganyesil.com.tr/";
 const list = async (table_name, params) => {
   var data = JSON.stringify(params);
   var config = {
-    method: "get",
+    method: "post",
     url: base_url + "api/v1/" + table_name + "/list",
     headers: {
       token: token,
@@ -67,7 +67,10 @@ const add = async (table_name, params) => {
 const get_enums = async (table_name, clm_name) => {
   var config = {
     method: "get",
-    url: base_url + "api/v1/" + table_name + "/enums+" + clm_name + "?token=" + token,
+    url: base_url + "api/v1/" + table_name + "/enums/" + clm_name,
+    headers: {
+      token: token,
+    },
   };
   let datas;
   await axios(config)

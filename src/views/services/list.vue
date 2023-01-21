@@ -1,12 +1,12 @@
 <template>
-  <div v-loading="loading">
+  <div>
     <div class="d-flex justify-content-between my-3">
       <span class="fs-3">
         {{ table_data.table_info?.display }}
       </span>
       <el-button type="primary" @click="addComponent()">Ekle</el-button>
     </div>
-    <el-table :data="table_data.records" style="width: 100%" height="90vh" stripe default-expand-all lazy>
+    <el-table v-loading="loading" :data="table_data.records" style="width: 100%; max-height: 90vh" default-expand-all lazy>
       <template v-for="clm in table_data.fields" :key="clm.id">
         <template v-if="columns_settings?.[clm.name]?.visible == false"></template>
         <template v-else-if="hide_columns.find((e) => e == clm.name)"></template>
@@ -102,8 +102,14 @@ export default {
   mounted() {
     this.getData();
   },
+  watch: {
+    $route() {
+      this.getData();
+    },
+  },
   methods: {
     getData() {
+      this.loading = true;
       this.columns_settings = columns_settings_all[this.$route.params.table_name];
       const params = {
         limit: 10,

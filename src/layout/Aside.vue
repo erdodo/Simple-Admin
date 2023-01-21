@@ -5,7 +5,7 @@
         <img src="/vendor/img/Simple.png" style="width: 25px" alt="" />
         <template #title><span class="mx-3 fs-3">Simple</span></template>
       </el-menu-item>
-      <el-sub-menu v-for="m in menu" :key="m.id">
+      <el-sub-menu v-for="m in menu" :key="m.id" :index="m.id">
         <template #title>
           <el-icon><location /></el-icon>
           <span>{{ m.display }}</span>
@@ -30,11 +30,43 @@
       </el-menu-item>
     </el-menu>
   </div>
+  <div v-show="getMenuState == true" class="d-md-none position-relative">
+    <el-menu
+      :default-active="$route.fullPath"
+      router
+      style="height: 100vh; background-color: var(--bs-body-bg); z-index: 3"
+      class="position-fixed"
+      :collapse="isCollapse"
+    >
+      <el-menu-item index="/">
+        <img src="/vendor/img/Simple.png" style="width: 25px" alt="" />
+        <template #title><span class="mx-3 fs-3">Simple</span></template>
+      </el-menu-item>
+      <el-sub-menu v-for="m in menu" :key="m.id" :index="m.id">
+        <template #title>
+          <el-icon><location /></el-icon>
+          <span>{{ m.display }}</span>
+        </template>
+
+        <el-menu-item v-for="t in m.table_name" :index="'/list/' + t.name" :key="t">
+          {{ t.display }}
+        </el-menu-item>
+      </el-sub-menu>
+
+      <el-menu-item>
+        <i class="bi bi-arrow-left-square ms-1" @click="$store.commit('setMenuState', false)"></i>
+        <template #title>
+          <span class="ms-3" @click="$store.commit('setMenuState', false)">Menü'yü Kapat</span>
+        </template>
+      </el-menu-item>
+    </el-menu>
+  </div>
 </template>
 
 <script>
 import { Document, Menu, Location, Setting } from "@element-plus/icons-vue";
 import services from "@/services";
+import { mapGetters } from "vuex";
 export default {
   components: { Document, Menu, Location, Setting },
   data() {
@@ -42,6 +74,14 @@ export default {
       isCollapse: false,
       menu: {},
     };
+  },
+  computed: {
+    ...mapGetters(["getMenuState"]),
+  },
+  watch: {
+    $route() {
+      this.$store.commit("setMenuState", false);
+    },
   },
   mounted() {
     services.get_cache().then((res) => {

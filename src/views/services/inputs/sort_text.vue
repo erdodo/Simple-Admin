@@ -1,6 +1,11 @@
 <template>
   <div>
-    <template v-if="clm.lang_support == '1'">
+    <template v-if="clm.enums != null">
+      <el-select v-model="value" placeholder="" class="w-100">
+        <el-option v-for="e in JSON.parse(clm.enums)" :key="e" :value="e"></el-option>
+      </el-select>
+    </template>
+    <template v-else-if="clm.lang_support == '1'">
       <template class="d-flex" v-for="v in langs_data" :key="v.name">
         <div class="d-flex align-items-center">
           <span class="text-nowrap col-2">{{ v.display }}: </span>
