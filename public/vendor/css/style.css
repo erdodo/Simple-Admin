@@ -12,6 +12,7 @@
 }
 body{
     width: 100vw;
+    height: 100vh;
 }
 html{
     overflow: hidden;
@@ -19,4 +20,19 @@ html{
 
 .inputs-float .el-input-number .el-input__inner{
     text-align: end !important;
+}
+.el-table--border .el-table__inner-wrapper::after, .el-table--border::after, .el-table--border::before, .el-table__inner-wrapper::before{
+    z-index: 1 !important;
+}
+.el-table .cell{
+    word-break:break-word !important;
+}
+.el-loading-mask{
+z-index: 3 !important;
+}
+.form-control{
+    background-color: transparent !important;
+}
+.cursor-pointer{
+    cursor: pointer;
 }

@@ -1,7 +1,9 @@
 <template>
-  <el-card body-style="padding:10px" class="mt-2">
-    <el-button type="primary" plain @click="$store.commit('setMenuState', true)">M</el-button>
-  </el-card>
+  <div body-style="padding:10px" class="mt-2">
+    <el-button type="primary" class="d-md-none" plain @click="$store.commit('setMenuState', true)"
+      ><i class="bi bi-list"></i
+    ></el-button>
+  </div>
 </template>
 
 <script>

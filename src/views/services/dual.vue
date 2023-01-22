@@ -4,10 +4,13 @@
     :title="config.table_info?.display + '  ' + inconfig.title"
     width="400px"
     :before-close="handleClose"
+    draggable
+    v-loading="loading"
   >
-    <template v-for="clm in columns" :key="clm.id">
-      <inputs v-model="params[clm.name]" :label="true" :clm="clm"></inputs>
+    <template v-for="clm in columns" :key="clm.name">
+      <inputs v-model="params[clm.name]" :modelValue="params[clm.name]" :params="params" :label="true" :clm="clm"></inputs>
     </template>
+
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -31,29 +34,94 @@ export default {
       },
       params: {},
       columns: {},
+      loading: true,
     };
   },
   watch: {
     visible(v) {
       this.dialogVisible = v;
       this.inconfig.title = this.config.type == "create" ? "Ekle" : "Düzenle";
-      this.getData();
+      this.getData().then((res) => {
+        console.log("yüklendi", res);
+        this.params = res;
+      });
     },
     dialogVisible(v) {
       this.$emit("update:visible", v);
     },
   },
   methods: {
-    getData() {
+    async getData() {
+      this.loading = true;
+      let prm = [];
       if (this.config.type == "create") {
-        services.create(this.$route.params.table_name).then((res) => {
+        await services.create(this.$route.params.table_name).then((res) => {
           this.columns = res.fields;
+          this.params = {};
+          this.loading = false;
         });
       }
+      if (this.config.type == "edit") {
+        this.params = {};
+        await services.edit(this.$route.params.table_name, this.config.data.id).then((res) => {
+          this.columns = res.fields;
+          let params = res.data;
+          for (const [key, val] of Object.entries(res.data)) {
+            if (this.columns[key]?.type == "bool") {
+              params[key] = val == 1 ? true : false;
+            } else if (this.columns[key]?.type == "file" || this.columns[key]?.type == "image") {
+              params["old_" + key] = val;
+              params[key] = null;
+            } else if (this.columns[key]?.type == "array" || this.columns[key]?.type == "object") {
+              params[key] = JSON.parse(val);
+            } else {
+              params[key] = val;
+            }
+          }
+
+          setTimeout(() => {
+            this.loading = false;
+          }, 100);
+          prm = params;
+        });
+      }
+      return prm;
     },
     saveData() {
       if (this.config.type == "create") {
-        services.add(this.$route.params.table_name, this.params);
+        let formData = new FormData();
+
+        for (const clm of Object.values(this.columns)) {
+          if (clm.type == "file") {
+            for (const file of Object.values(document.querySelector("#" + clm.name).files)) {
+              console.log(file);
+              formData.append(clm.name + "[]", file);
+            }
+          } else if (clm?.type == "array" || clm.type == "object") {
+            formData.append(clm.name, JSON.stringify(this.params[clm.name]));
+          } else {
+            formData.append(clm.name, this.params[clm.name] == undefined ? "" : this.params[clm.name]);
+          }
+        }
+        services.add(this.$route.params.table_name, formData);
+      }
+      if (this.config.type == "edit") {
+        let formData = new FormData();
+
+        for (const clm of Object.values(this.columns)) {
+          if (clm.type == "file") {
+            console.log(this.params["old_" + clm.name]);
+            formData.append("old_" + clm.name, this.params["old_" + clm.name]);
+            for (const file of Object.values(document.querySelector("#" + clm.name).files)) {
+              formData.append(clm.name + "[]", file);
+            }
+          } else if (clm?.type == "array" || clm?.type == "object") {
+            formData.append(clm.name, JSON.stringify(this.params[clm.name]));
+          } else {
+            formData.append(clm.name, this.params[clm.name] == undefined ? "" : this.params[clm.name]);
+          }
+        }
+        services.update(this.$route.params.table_name, this.config.data.id, formData);
       }
     },
   },

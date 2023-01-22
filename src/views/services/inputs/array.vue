@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <template v-if="clm.enums != null">
+    <template v-if="clm.enums != null && clm.enums != 'null'">
       <el-select v-model="value" placeholder="" multiple class="w-100">
         <el-option v-for="e in JSON.parse(clm.enums)" :key="e" :value="e"></el-option>
       </el-select>
@@ -15,7 +15,7 @@
         default-first-option
         :reserve-keyword="false"
       >
-        <el-option v-for="(item, clm) in enums" :key="clm" :label="item" :value="clm" />
+        <el-option v-for="(item, clm) in enums" :key="clm" :label="item.show" :value="clm" />
       </el-select>
     </template>
   </div>
@@ -31,10 +31,11 @@ export default {
   },
   watch: {
     value(v) {
-      this.$emit("update:modelValue", JSON.stringify(v));
+      console.log(this.clm.name, v);
+      this.$emit("update:modelValue", v);
     },
     modelValue(v) {
-      this.value = JSON.parse(v);
+      this.value = v;
     },
   },
   mounted() {

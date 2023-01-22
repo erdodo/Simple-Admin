@@ -7,25 +7,27 @@
       </el-menu-item>
       <el-sub-menu v-for="m in menu" :key="m.id" :index="m.id">
         <template #title>
-          <el-icon><location /></el-icon>
+          <el-icon v-html="m.icon"></el-icon>
           <span>{{ m.display }}</span>
         </template>
 
-        <el-menu-item v-for="t in m.table_name" :index="'/list/' + t.name" :key="t">
+        <el-menu-item v-for="t in m.table_group_tables" :index="'/list/' + t.name" :key="t">
           {{ t.display }}
         </el-menu-item>
       </el-sub-menu>
 
-      <el-menu-item v-if="isCollapse">
-        <i class="bi bi-arrow-right-square ms-1" @click="isCollapse = !isCollapse"></i>
+      <el-menu-item v-if="isCollapse" class="postion-relative">
+        <div class="position-absolute start-0 w-100 h-100" @click="isCollapse = !isCollapse"></div>
+        <el-icon @click="isCollapse = !isCollapse"><i class="bi bi-arrow-right-square"></i></el-icon>
         <template #title>
-          <span class="ms-2" @click="isCollapse = !isCollapse">Menü'yü Aç</span>
+          <span @click="isCollapse = !isCollapse">Menü'yü Aç</span>
         </template>
       </el-menu-item>
-      <el-menu-item v-else>
-        <i class="bi bi-arrow-left-square ms-1" @click="isCollapse = !isCollapse"></i>
+      <el-menu-item v-else class="postion-relative">
+        <div class="position-absolute start-0 w-100 h-100" @click="isCollapse = !isCollapse"></div>
+        <el-icon @click="isCollapse = !isCollapse"><i class="bi bi-arrow-left-square"></i></el-icon>
         <template #title>
-          <span class="ms-3" @click="isCollapse = !isCollapse">Menü'yü Kapat</span>
+          <span @click="isCollapse = !isCollapse">Menü'yü Kapat</span>
         </template>
       </el-menu-item>
     </el-menu>
@@ -34,9 +36,9 @@
     <el-menu
       :default-active="$route.fullPath"
       router
-      style="height: 100vh; background-color: var(--bs-body-bg); z-index: 3"
+      style="height: 100vh; background-color: var(--bs-body-bg); z-index: 4"
       class="position-fixed"
-      :collapse="isCollapse"
+      :collapse="false"
     >
       <el-menu-item index="/">
         <img src="/vendor/img/Simple.png" style="width: 25px" alt="" />
@@ -48,13 +50,14 @@
           <span>{{ m.display }}</span>
         </template>
 
-        <el-menu-item v-for="t in m.table_name" :index="'/list/' + t.name" :key="t">
+        <el-menu-item v-for="t in m.table_group_tables" :index="'/list/' + t.name" :key="t">
           {{ t.display }}
         </el-menu-item>
       </el-sub-menu>
 
-      <el-menu-item>
-        <i class="bi bi-arrow-left-square ms-1" @click="$store.commit('setMenuState', false)"></i>
+      <el-menu-item class="postion-relative">
+        <div class="position-absolute start-0 w-100 h-100" @click="$store.commit('setMenuState', false)"></div>
+        <i class="bi bi-arrow-left-square ms-1"></i>
         <template #title>
           <span class="ms-3" @click="$store.commit('setMenuState', false)">Menü'yü Kapat</span>
         </template>

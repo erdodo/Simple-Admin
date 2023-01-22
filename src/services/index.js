@@ -24,6 +24,24 @@ const list = async (table_name, params) => {
     });
   return datas;
 };
+const show = async (table_name, filter) => {
+  var config = {
+    method: "post",
+    url: base_url + "api/v1/" + table_name + "/show/" + filter,
+    headers: {
+      token: token,
+    },
+  };
+  let datas;
+  await axios(config)
+    .then((res) => {
+      datas = res.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  return datas;
+};
 const create = async (table_name, params) => {
   var data = JSON.stringify(params);
   var config = {
@@ -45,14 +63,65 @@ const create = async (table_name, params) => {
   return datas;
 };
 const add = async (table_name, params) => {
-  var data = JSON.stringify(params);
+  const url = base_url + "api/v1/" + table_name + "/add";
+  const headers = {
+    token: token,
+    "Content-Type": "multipart/form-data",
+  };
+  let datas;
+  await axios
+    .post(url, params, { headers })
+    .then((res) => {
+      datas = res.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  return datas;
+};
+const edit = async (table_name, filter) => {
   var config = {
-    method: "post",
-    url: base_url + "api/v1/" + table_name + "/add",
+    method: "get",
+    url: base_url + "api/v1/" + table_name + "/edit/" + filter,
     headers: {
       token: token,
     },
-    data: data,
+  };
+  let datas;
+  await axios(config)
+    .then((res) => {
+      datas = res.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  return datas;
+};
+const update = async (table_name, filter, params) => {
+  const url = base_url + "api/v1/" + table_name + "/update/" + filter;
+  var config = {
+    headers: {
+      token: token,
+    },
+  };
+  let datas;
+  await axios
+    .post(url, params, config)
+    .then((res) => {
+      datas = res.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  return datas;
+};
+const clean = async (table_name, filter) => {
+  var config = {
+    method: "get",
+    url: base_url + "api/v1/" + table_name + "/delete/" + filter,
+    headers: {
+      token: token,
+    },
   };
   let datas;
   await axios(config)
@@ -129,4 +198,4 @@ const get_cache = async () => {
   return cache;
 };
 
-export default { list, create, add, get_enums, get_cache };
+export default { list, show, create, add, edit, update, clean, get_enums, get_cache };

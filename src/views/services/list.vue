@@ -6,45 +6,37 @@
       </span>
       <el-button type="primary" @click="addComponent()">Ekle</el-button>
     </div>
-    <el-table v-loading="loading" :data="table_data.records" style="width: 100%; max-height: 90vh" default-expand-all lazy>
+    <el-table
+      v-loading="loading"
+      :data="table_data.records"
+      table-layout="fixed"
+      class="rounded"
+      style="width: 100%; height: 70vh"
+      default-expand-all
+      lazy
+    >
       <template v-for="clm in table_data.fields" :key="clm.id">
         <template v-if="columns_settings?.[clm.name]?.visible == false"></template>
         <template v-else-if="hide_columns.find((e) => e == clm.name)"></template>
-        <el-table-column v-else :prop="clm.name" :label="clm.display" width="180">
+        <el-table-column v-else :prop="clm.name">
+          <template #header>
+            <span class="text-nowrap">{{ clm.display }}</span>
+          </template>
           <template #default="scope">
-            <!--BOŞ VERİ-->
-            <span v-if="scope.row[clm.name] == null || scope.row[clm.name].length <= 0">Boş</span>
-            <!--OBJECT VERİ-->
-            <span v-else-if="typeof scope.row[clm.name] == typeof {}">
-              <el-dropdown>
-                <span class="el-dropdown-link"> Detay </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item v-for="(d, k) in scope.row[clm.name]" :key="k">{{ k }}: {{ d }}</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </span>
-            <!--BOOLEAND VERİ-->
-            <span v-else-if="clm.type == 'bool'">
-              <i v-if="clm.type" class="bi bi-check-circle"></i>
-              <i v-else class="bi bi-x-circle"></i>
-            </span>
-            <!--DİĞERLERİ-->
-            <span v-else>{{ scope.row[clm.name] }}</span>
+            <show_record :data="scope.row" :clm="clm"></show_record>
           </template>
         </el-table-column>
       </template>
-      <el-table-column fixed="right" width="70">
+      <el-table-column :fixed="width > 500 ? 'right' : undefined" width="70">
         <template #header> İşlem </template>
         <template #default="scope">
           <el-dropdown>
             <el-button plain> <i class="bi bi-pencil-square"></i></el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>Detay</el-dropdown-item>
-                <el-dropdown-item>Düzenle</el-dropdown-item>
-                <el-dropdown-item divided class="text-danger">Sil</el-dropdown-item>
+                <el-dropdown-item @click="detailComponent(scope.row)">Detay</el-dropdown-item>
+                <el-dropdown-item @click="editComponent(scope.row)">Düzenle</el-dropdown-item>
+                <el-dropdown-item divided class="text-danger" @click="deleteEvent(scope.row.id)">Sil</el-dropdown-item>
                 <el-dropdown-item divided>
                   <div class="d-flex flex-column">
                     <el-tooltip
@@ -80,6 +72,7 @@
       </el-table-column>
     </el-table>
     <dual v-model:visible="dual_dialog_visible" :config="dual_config"></dual>
+    <detail v-model:visible="detail_dialog_visible" :config="detail_config"></detail>
   </div>
 </template>
 
@@ -87,8 +80,10 @@
 import services from "@/services";
 import columns_settings_all from "./columns_settings";
 import dual from "@/views/services/dual";
+import Detail from "./detail.vue";
+import show_record from "@/components/show_record.vue";
 export default {
-  components: { dual },
+  components: { dual, Detail, show_record },
   data() {
     return {
       table_data: {},
@@ -97,10 +92,17 @@ export default {
       hide_columns: ["own_id", "id", "user_id", "updated_at", "created_at"],
       dual_dialog_visible: false,
       dual_config: {},
+      detail_dialog_visible: false,
+      detail_config: {},
+      width: 0,
     };
   },
   mounted() {
     this.getData();
+    this.width = window.innerWidth;
+    window.addEventListener("resize", () => {
+      this.width = window.innerWidth;
+    });
   },
   watch: {
     $route() {
@@ -112,7 +114,7 @@ export default {
       this.loading = true;
       this.columns_settings = columns_settings_all[this.$route.params.table_name];
       const params = {
-        limit: 10,
+        limit: 50,
       };
       services.list(this.$route.params.table_name, params).then((res) => {
         this.table_data = res;
@@ -125,6 +127,24 @@ export default {
         type: "create",
         table_info: this.table_data.table_info,
       };
+    },
+    detailComponent(data) {
+      this.detail_dialog_visible = true;
+      this.detail_config = {
+        table_info: this.table_data.table_info,
+        data: data,
+      };
+    },
+    editComponent(data) {
+      this.dual_dialog_visible = true;
+      this.dual_config = {
+        type: "edit",
+        table_info: this.table_data.table_info,
+        data: data,
+      };
+    },
+    deleteEvent(id) {
+      //this.services.clean(this.$route.params.table_name, id);
     },
   },
 };

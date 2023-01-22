@@ -35,6 +35,11 @@ export default {
       this.$emit("update:modelValue", v);
     },
     modelValue(v) {
+      if (this.clm.lang_support == 1 && v != "") {
+        try {
+          this.lang_value = JSON.parse(v);
+        } catch (error) {}
+      }
       this.value = v;
     },
   },

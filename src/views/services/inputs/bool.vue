@@ -11,7 +11,7 @@ export default {
   props: ["modelValue", "clm"],
   data() {
     return {
-      value: null,
+      value: false,
     };
   },
   watch: {
@@ -19,11 +19,12 @@ export default {
       this.$emit("update:modelValue", v);
     },
     modelValue(v) {
+      console.log();
       this.value = v;
     },
   },
   mounted() {
-    this.value = this.modelValue;
+    // this.value = this.modelValue;
   },
   methods: {},
   components: {
