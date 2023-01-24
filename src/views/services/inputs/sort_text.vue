@@ -1,7 +1,15 @@
 <template>
   <div>
     <template v-if="clm.enums != null">
-      <el-select v-model="value" placeholder="" class="w-100">
+      <el-select
+        v-model="value"
+        placeholder=""
+        class="w-100"
+        filterable
+        allow-create
+        default-first-option
+        :reserve-keyword="false"
+      >
         <el-option v-for="e in JSON.parse(clm.enums)" :key="e" :value="e"></el-option>
       </el-select>
     </template>

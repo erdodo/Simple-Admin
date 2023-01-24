@@ -24,4 +24,12 @@ const success = (message, title = "Başarılı") => {
     position: "bottom-left",
   });
 };
-export default { error, warning, success };
+const info = (message, title = "Bilgi") => {
+  ElNotification({
+    title: title,
+    message: message,
+    type: "info",
+    position: "bottom-left",
+  });
+};
+export default { error, warning, success, info };

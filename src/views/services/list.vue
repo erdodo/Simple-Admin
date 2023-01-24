@@ -4,7 +4,13 @@
       <span class="fs-3">
         {{ table_data.table_info?.display }}
       </span>
-      <el-button type="primary" @click="addComponent()">Ekle</el-button>
+      <div>
+        <transition name="el-fade-in">
+          <el-button type="danger" v-show="selected_column_length > 0"> Sil</el-button>
+        </transition>
+        <el-button type="primary" @click="openFilter()">Filtreleme Seçenekleri</el-button>
+        <el-button type="primary" @click="addComponent()">Ekle</el-button>
+      </div>
     </div>
     <el-table
       v-loading="loading"
@@ -14,21 +20,36 @@
       style="width: 100%; height: 70vh"
       default-expand-all
       lazy
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" width="55" />
       <template v-for="clm in table_data.fields" :key="clm.id">
         <template v-if="columns_settings?.[clm.name]?.visible == false"></template>
         <template v-else-if="hide_columns.find((e) => e == clm.name)"></template>
-        <el-table-column v-else :prop="clm.name">
-          <template #header>
-            <span class="text-nowrap">{{ clm.display }}</span>
-          </template>
-          <template #default="scope">
-            <show_record :data="scope.row" :clm="clm"></show_record>
-          </template>
-        </el-table-column>
+        <template v-else>
+          <el-table-column :prop="clm.name" min-width="150px" max-height="60px">
+            <template #header>
+              <div class="d-flex flex-column cursor-pointer">
+                <div class="d-flex justify-content-between" @click="sortable(clm.name)">
+                  <span>{{ clm.display }}</span>
+                  <i class="ms-1 bi bi-arrow-down-up"></i>
+                </div>
+                <inputs v-if="filter_show" v-model="filter_data[clm.name]" :clm="clm"></inputs>
+              </div>
+            </template>
+            <template #default="scope">
+              <show_record :data="scope.row" :clm="clm"></show_record>
+            </template>
+          </el-table-column>
+        </template>
       </template>
       <el-table-column :fixed="width > 500 ? 'right' : undefined" width="70">
-        <template #header> İşlem </template>
+        <template #header>
+          <div class="d-flex flex-column">
+            <span class="text-nowrap">İşlem</span>
+            <el-button type="primary" @click="filterChange()" v-if="filter_show">Ara</el-button>
+          </div>
+        </template>
         <template #default="scope">
           <el-dropdown>
             <el-button plain> <i class="bi bi-pencil-square"></i></el-button>
@@ -71,7 +92,45 @@
         </template>
       </el-table-column>
     </el-table>
-    <dual v-model:visible="dual_dialog_visible" :config="dual_config"></dual>
+    <div class="d-flex justify-content-between flex-wrap my-3 mb-5 pb-5">
+      <el-pagination
+        class="flex-wrap"
+        v-model:current-page="table_params.page"
+        v-model:page-size="table_params.limit"
+        :page-sizes="[10, 25, 50, 100, 250]"
+        background="background"
+        layout="total, sizes"
+        :total="table_data.all_record_count"
+        :pager-count="4"
+        @size-change="getData()"
+        @current-change="getData()"
+      />
+      <el-pagination
+        class="flex-wrap"
+        v-model:current-page="table_params.page"
+        v-model:page-size="table_params.limit"
+        :page-sizes="[10, 25, 50, 100, 250]"
+        background="background"
+        layout=" prev, pager, next"
+        :total="table_data.all_record_count"
+        :pager-count="4"
+        @size-change="getData()"
+        @current-change="getData()"
+      />
+      <el-pagination
+        class="flex-wrap"
+        v-model:current-page="table_params.page"
+        v-model:page-size="table_params.limit"
+        :page-sizes="[10, 25, 50, 100, 250]"
+        background="background"
+        layout="jumper"
+        :total="table_data.all_record_count"
+        :pager-count="4"
+        @size-change="getData()"
+        @current-change="getData()"
+      />
+    </div>
+    <dual v-model:visible="dual_dialog_visible" :config="dual_config" @success="getData()"></dual>
     <detail v-model:visible="detail_dialog_visible" :config="detail_config"></detail>
   </div>
 </template>
@@ -82,19 +141,33 @@ import columns_settings_all from "./columns_settings";
 import dual from "@/views/services/dual";
 import Detail from "./detail.vue";
 import show_record from "@/components/show_record.vue";
+import { ElMessageBox } from "element-plus";
+import Inputs from "./inputs.vue";
 export default {
-  components: { dual, Detail, show_record },
+  components: { dual, Detail, show_record, Inputs },
   data() {
     return {
+      table_params: {
+        limit: 10,
+        page: 1,
+        filters: {},
+        like: {},
+        sorts: {},
+      },
       table_data: {},
       loading: true,
       columns_settings: {},
-      hide_columns: ["own_id", "id", "user_id", "updated_at", "created_at"],
+      hide_columns: ["own_id", "id", "user_id", "updated_at", "created_at", "companies_id"],
       dual_dialog_visible: false,
       dual_config: {},
       detail_dialog_visible: false,
       detail_config: {},
       width: 0,
+
+      filter_show: false,
+      filter_data: {},
+
+      selected_column_length: 0,
     };
   },
   mounted() {
@@ -113,10 +186,7 @@ export default {
     getData() {
       this.loading = true;
       this.columns_settings = columns_settings_all[this.$route.params.table_name];
-      const params = {
-        limit: 50,
-      };
-      services.list(this.$route.params.table_name, params).then((res) => {
+      services.list(this.$route.params.table_name, this.table_params).then((res) => {
         this.table_data = res;
         this.loading = false;
       });
@@ -144,7 +214,46 @@ export default {
       };
     },
     deleteEvent(id) {
-      //this.services.clean(this.$route.params.table_name, id);
+      ElMessageBox.confirm("Silmek istediğinize emin misiniz?", "Dikkat", {
+        confirmButtonText: "Evet",
+        cancelButtonText: "Vazgeç",
+        type: "warning",
+      })
+        .then(() => {
+          this.services.clean(this.$route.params.table_name, id).then(() => {
+            this.bildir.success("Başarıyla Silindi");
+            this.getData();
+          });
+        })
+        .catch(() => {
+          this.bildir.info("Silmekten vazgeçildi");
+        });
+    },
+    openFilter() {
+      this.filter_show = !this.filter_show;
+    },
+    filterChange() {
+      for (const [k, v] of Object.entries(this.filter_data)) {
+        if (v != "" && v != undefined && v.length > 0) {
+          this.table_params.like[k] = v;
+        }
+      }
+      console.log(this.table_params);
+      this.getData();
+    },
+    sortable(clm) {
+      console.log(clm, this.table_params.sorts);
+      if (this.table_params.sorts[clm] == undefined) {
+        this.table_params.sorts[clm] = true;
+      } else if (this.table_params.sorts[clm] == true) {
+        this.table_params.sorts[clm] = false;
+      } else if (this.table_params.sorts[clm] == false) {
+        delete this.table_params.sorts[clm];
+      }
+      this.getData();
+    },
+    handleSelectionChange(e) {
+      this.selected_column_length = e.length;
     },
   },
 };

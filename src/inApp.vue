@@ -21,13 +21,20 @@ import Aside from "@/layout/Aside.vue";
 import Header from "./layout/Header.vue";
 
 import services from "@/services";
+import { mapGetters } from "vuex";
 export default {
   components: { Aside, Header },
   data() {
     return {};
   },
+  computed: {
+    ...mapGetters(["get_token"]),
+  },
   mounted() {
-    services.get_cache();
+    if (this.get_token) {
+      services.system_control();
+      services.get_cache();
+    }
   },
 };
 </script>

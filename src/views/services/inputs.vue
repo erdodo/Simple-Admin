@@ -10,6 +10,15 @@
     <template v-else-if="clm.type == 'number'">
       <number v-model="value" :clm="clm" :enums="enums"></number>
     </template>
+    <template v-else-if="clm.type == 'email'">
+      <email v-model="value" :clm="clm" :enums="enums"></email>
+    </template>
+    <template v-else-if="clm.type == 'phone'">
+      <phone v-model="value" :clm="clm" :enums="enums"></phone>
+    </template>
+    <template v-else-if="clm.type == 'password'">
+      <pass v-model="value" :clm="clm" :enums="enums"></pass>
+    </template>
     <template v-else-if="clm.type == 'float'">
       <float v-model="value" :clm="clm"></float>
     </template>
@@ -18,6 +27,9 @@
     </template>
     <template v-else-if="clm.type == 'file'">
       <file v-model="value" :clm="clm" :enums="enums" :params="params" @params="params = $event"></file>
+    </template>
+    <template v-else-if="clm.type == 'image'">
+      <imageInputs v-model="value" :clm="clm" :enums="enums" :params="params" @params="params = $event"></imageInputs>
     </template>
     <template v-else-if="clm.type == 'array'">
       <array v-model="value" :clm="clm" :enums="enums"></array>
@@ -33,10 +45,14 @@ import number from "@/views/services/inputs/number";
 import bool from "@/views/services/inputs/bool";
 import file from "@/views/services/inputs/file";
 import array from "@/views/services/inputs/array";
+import email from "@/views/services/inputs/email";
+import phone from "@/views/services/inputs/phone";
+import pass from "@/views/services/inputs/pass";
+import imageInputs from "@/views/services/inputs/image_inputs";
 
 import services from "@/services";
 export default {
-  components: { sortText, long_text, float, number, bool, file, array },
+  components: { sortText, long_text, float, number, bool, file, array, email, phone, pass, imageInputs },
   props: ["clm", "modelValue", "label", "params"],
   data() {
     return {
@@ -50,7 +66,6 @@ export default {
     },
     modelValue(v) {
       this.value = v;
-      console.log(v, this.params[this.clm.name]);
     },
   },
   mounted() {

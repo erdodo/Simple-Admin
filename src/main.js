@@ -9,6 +9,7 @@ import bildir from "./components/bildir.js";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import "element-plus/theme-chalk/dark/css-vars.css";
+import tr from "element-plus/dist/locale/tr.mjs";
 
 import FloatingVue from "floating-vue";
 import "floating-vue/dist/style.css";
@@ -21,7 +22,9 @@ app.config.globalProperties.bildir = bildir;
 app.use(store);
 app.use(router);
 
-app.use(ElementPlus);
+app.use(ElementPlus, {
+  locale: tr,
+});
 app.use(FloatingVue);
 
 app.mount("#app");

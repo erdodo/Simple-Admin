@@ -1,0 +1,36 @@
+import axios from "axios";
+import bildir from "@/components/bildir";
+import store from "@/store";
+
+const token = localStorage.getItem("token", "4ed81a1bca39b6106b62d98d9a93c13b");
+const base_url = "https://backend.erdoganyesil.com.tr/";
+
+const login = async (email, pass) => {
+  var data = JSON.stringify({
+    email: email,
+    password: pass,
+  });
+  var config = {
+    url: base_url + "api/account/login",
+    headers: {
+      token: token,
+    },
+  };
+  let datas;
+  await axios
+    .post(config.url, data, config)
+    .then((res) => {
+      if (res.data.data?.token != undefined) {
+        localStorage.setItem("token", res.data.data?.token);
+        store.commit("set_logged_in", true);
+        store.commit("set_TOKEN", res.data.data?.token);
+      }
+      datas = res.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+      bildir.error(error.response.data.message);
+    });
+  return datas;
+};
+export default { login };

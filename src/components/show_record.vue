@@ -16,7 +16,7 @@
         <span class="el-dropdown-link"> Detay </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item v-for="(d, k) in data[clm.name]" :key="k">{{ k }}: {{ d }}</el-dropdown-item>
+            <el-dropdown-item v-for="(d, k) in data[clm.name]" :key="k">{{ d.show }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

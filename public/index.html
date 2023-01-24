@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" class="dark" data-bs-theme="dark">
+<html lang="tr" class="dark" data-bs-theme="dark" id="html">
 
 <head>
   <meta charset="utf-8">
@@ -22,6 +22,16 @@
   </noscript>
   <div id="app"></div>
   <!-- built files will be auto injected -->
+  <script>
+    let localTheme = localStorage.getItem("theme");
+    let dark_theme = localTheme == null || localTheme == "dark";
+
+    let newTheme = dark_theme ? "dark" : "light";
+    let html = document.getElementById("html");
+    html.className = newTheme;
+    html.attributes["data-bs-theme"].value = newTheme;
+    localStorage.setItem("theme", newTheme);
+  </script>
 </body>
 
 </html>

@@ -40,11 +40,12 @@ export default {
   watch: {
     visible(v) {
       this.dialogVisible = v;
-      this.inconfig.title = this.config.type == "create" ? "Ekle" : "Düzenle";
-      this.getData().then((res) => {
-        console.log("yüklendi", res);
-        this.params = res;
-      });
+      if (v) {
+        this.inconfig.title = this.config.type == "create" ? "Ekle" : "Düzenle";
+        this.getData().then((res) => {
+          this.params = res;
+        });
+      }
     },
     dialogVisible(v) {
       this.$emit("update:visible", v);
@@ -94,7 +95,6 @@ export default {
         for (const clm of Object.values(this.columns)) {
           if (clm.type == "file") {
             for (const file of Object.values(document.querySelector("#" + clm.name).files)) {
-              console.log(file);
               formData.append(clm.name + "[]", file);
             }
           } else if (clm?.type == "array" || clm.type == "object") {
@@ -103,14 +103,20 @@ export default {
             formData.append(clm.name, this.params[clm.name] == undefined ? "" : this.params[clm.name]);
           }
         }
-        services.add(this.$route.params.table_name, formData);
+        services.add(this.$route.params.table_name, formData).then((res) => {
+          console.log(res);
+          if (res.status == "success") {
+            this.bildir.success("Başarıyla Eklendi");
+            this.dialogVisible = false;
+            this.$emit("success");
+          }
+        });
       }
       if (this.config.type == "edit") {
         let formData = new FormData();
 
         for (const clm of Object.values(this.columns)) {
           if (clm.type == "file") {
-            console.log(this.params["old_" + clm.name]);
             formData.append("old_" + clm.name, this.params["old_" + clm.name]);
             for (const file of Object.values(document.querySelector("#" + clm.name).files)) {
               formData.append(clm.name + "[]", file);
@@ -121,7 +127,11 @@ export default {
             formData.append(clm.name, this.params[clm.name] == undefined ? "" : this.params[clm.name]);
           }
         }
-        services.update(this.$route.params.table_name, this.config.data.id, formData);
+        services.update(this.$route.params.table_name, this.config.data.id, formData).then(() => {
+          this.bildir.success("Başarıyla Düzenlendi");
+          this.dialogVisible = false;
+          this.$emit("success");
+        });
       }
     },
   },
