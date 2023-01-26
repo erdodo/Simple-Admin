@@ -87,6 +87,7 @@ export default {
     },
   },
   mounted() {
+    this.menu = JSON.parse(localStorage.getItem("cache"))?.table_group;
     services.get_cache().then((res) => {
       this.menu = res.table_group;
     });

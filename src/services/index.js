@@ -173,59 +173,56 @@ const system_control = async () => {
   };
   let datas;
   await axios(config).catch(function (error) {
-    if (error.response.data.message == "token_error") {
+    if (error.response.data.message == "token_error" || error.response.data.message == "user_not_found") {
       store.commit("set_logged_in", false);
       localStorage.clear();
     }
-    bildir.error(error.message);
+    bildir.error(error.response.data.message);
   });
   return datas;
 };
 const get_cache = async () => {
   if (token == undefined) token = store.getters.get_token;
   const local_cache = JSON.parse(localStorage.getItem("cache"));
-  let cache = {};
-  /*if (local_cache != null && local_cache?.time > new Date().getTime()) {
+  let cache = local_cache;
+  if (local_cache != null && local_cache?.time > new Date().getTime()) {
     console.info(
       "%c Yedekleme güncel:",
       " color: green",
       moment(local_cache?.time).format("HH:mm:ss"),
       moment().format("HH:mm:ss")
     );
-    cache = local_cache;
   } else if (localStorage.getItem("cache_status") == "false") {
     console.info("%c Yedekleme Bekleniyor...", " color: yellow");
-    cache = local_cache;
 
     if (local_cache?.time + 10000 < new Date().getTime()) localStorage.setItem("cache_status", "true");
-  } else {*/
-  cache = local_cache;
-  console.info("%c Yedekleme güncelleniyor...", " color: red");
-  localStorage.setItem("cache_status", "false");
-  var config = {
-    method: "get",
-    url: base_url + "api/v2/front_cache",
-    headers: {
-      token: token,
-    },
-  };
-  axios(config)
-    .then((res) => {
-      cache = local_cache;
-      localStorage.setItem("cache", JSON.stringify(res.data));
-      cache = res.data;
-      localStorage.setItem("cache_status", "true");
-      console.info(
-        "%c Yedekleme güncel:",
-        " color: green",
-        moment(res.data?.time).format("HH:mm:ss"),
-        moment().format("HH:mm:ss")
-      );
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  //}
+  } else {
+    console.info("%c Yedekleme güncelleniyor...", " color: red");
+    localStorage.setItem("cache_status", "false");
+    var config = {
+      method: "get",
+      url: base_url + "api/v2/front_cache",
+      headers: {
+        token: token,
+      },
+    };
+    await axios(config)
+      .then((res) => {
+        cache = local_cache;
+        localStorage.setItem("cache", JSON.stringify(res.data));
+        cache = res.data;
+        localStorage.setItem("cache_status", "true");
+        console.info(
+          "%c Yedekleme güncel:",
+          " color: green",
+          moment(res.data?.time).format("HH:mm:ss"),
+          moment().format("HH:mm:ss")
+        );
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
   return cache;
 };
 

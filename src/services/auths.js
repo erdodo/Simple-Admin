@@ -24,6 +24,7 @@ const login = async (email, pass) => {
         localStorage.setItem("token", res.data.data?.token);
         store.commit("set_logged_in", true);
         store.commit("set_TOKEN", res.data.data?.token);
+        location.reload();
       }
       datas = res.data;
     })
@@ -33,4 +34,26 @@ const login = async (email, pass) => {
     });
   return datas;
 };
-export default { login };
+const logout = () => {
+  var config = {
+    url: base_url + "api/account/logout",
+    headers: {
+      token: token,
+    },
+  };
+
+  axios
+    .post(config.url, {}, config)
+    .then(() => {
+      localStorage.clear();
+      store.commit("set_logged_in", false);
+      localStorage.setItem("logged_in", false);
+      store.commit("set_TOKEN", null);
+      location.reload();
+    })
+    .catch(function (error) {
+      console.log(error);
+      bildir.error(error.response.data.message);
+    });
+};
+export default { login, logout };
