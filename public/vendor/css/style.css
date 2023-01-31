@@ -3,7 +3,7 @@
     position: fixed;
     z-index: -1;
     opacity: 0.4;
-    background-image: url("/vendor/img/back2.png");
+    /*background-image: url("/vendor/img/back2.png");*/
     
     width: 100vw;
     height:100vh;
@@ -24,7 +24,7 @@ html{
 }
 .light{
     --el-fill-color-blank:rgba(255,255,255,0.4) !important;
-    --bs-body-bg:rgba(255,255,255,0.3) !important;
+    --bs-body-bg:rgba(223, 219, 210, 0.3) !important;
 }
 
 .inputs-float .el-input-number .el-input__inner{

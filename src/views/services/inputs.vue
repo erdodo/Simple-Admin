@@ -2,37 +2,102 @@
   <div class="my-1" v-tooltip="clm.description ? clm.description : null">
     <label v-if="label">{{ clm.display }}:</label>
     <template v-if="clm.type == 'sort_text'">
-      <sort-text v-model="value" :clm="clm"></sort-text>
+      <sort-text
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+      ></sort-text>
     </template>
     <template v-else-if="clm.type == 'long_text'">
-      <long_text v-model="value" :clm="clm" :enums="enums"></long_text>
+      <long_text
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+      ></long_text>
     </template>
     <template v-else-if="clm.type == 'number'">
-      <number v-model="value" :clm="clm" :enums="enums"></number>
+      <number
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+      ></number>
     </template>
     <template v-else-if="clm.type == 'email'">
-      <email v-model="value" :clm="clm" :enums="enums"></email>
+      <email
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+      ></email>
     </template>
     <template v-else-if="clm.type == 'phone'">
-      <phone v-model="value" :clm="clm" :enums="enums"></phone>
+      <phone
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+      ></phone>
     </template>
     <template v-else-if="clm.type == 'password'">
-      <pass v-model="value" :clm="clm" :enums="enums"></pass>
+      <pass
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+      ></pass>
     </template>
     <template v-else-if="clm.type == 'float'">
-      <float v-model="value" :clm="clm"></float>
+      <float :modelValue="modelValue" @update:modelValue="$emit('update:modelValue', $event)" :clm="clm"></float>
     </template>
     <template v-else-if="clm.type == 'bool'">
-      <bool v-model="value" :clm="clm"></bool>
+      <bool :modelValue="modelValue" @update:modelValue="$emit('update:modelValue', $event)" :clm="clm"></bool>
     </template>
     <template v-else-if="clm.type == 'file'">
-      <file v-model="value" :clm="clm" :enums="enums" :params="params" @params="params = $event"></file>
+      <file
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+        :params="params"
+        @params="params = $event"
+      ></file>
     </template>
     <template v-else-if="clm.type == 'image'">
-      <imageInputs v-model="value" :clm="clm" :enums="enums" :params="params" @params="params = $event"></imageInputs>
+      <imageInputs
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+        :params="params"
+        @params="params = $event"
+      ></imageInputs>
     </template>
     <template v-else-if="clm.type == 'array'">
-      <array v-model="value" :clm="clm" :enums="enums"></array>
+      <array
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+      ></array>
+    </template>
+    <template v-else-if="clm.type == 'date'">
+      <date
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+      ></date>
+    </template>
+    <template v-else-if="clm.type == 'datetime'">
+      <datetime
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :clm="clm"
+        :enums="enums"
+      ></datetime>
     </template>
   </div>
 </template>
@@ -49,27 +114,20 @@ import email from "@/views/services/inputs/email";
 import phone from "@/views/services/inputs/phone";
 import pass from "@/views/services/inputs/pass";
 import imageInputs from "@/views/services/inputs/image_inputs";
+import date from "@/views/services/inputs/date";
+import datetime from "@/views/services/inputs/datetime";
 
 import services from "@/services";
 export default {
-  components: { sortText, long_text, float, number, bool, file, array, email, phone, pass, imageInputs },
+  components: { sortText, long_text, float, number, bool, file, array, email, phone, pass, imageInputs, date, datetime },
   props: ["clm", "modelValue", "label", "params"],
   data() {
     return {
-      value: "" || [] || {} || 0,
       enums: [],
     };
   },
-  watch: {
-    value(v) {
-      this.$emit("update:modelValue", v);
-    },
-    modelValue(v) {
-      this.value = v;
-    },
-  },
+  watch: {},
   mounted() {
-    this.value = this.modelValue;
     if (this.clm.relation_table != null) {
       services.get_enums(this.$route.params.table_name, this.clm.name).then((res) => {
         this.enums = res.records;

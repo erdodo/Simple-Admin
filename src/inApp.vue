@@ -33,7 +33,7 @@ export default {
   mounted() {
     if (this.get_token) {
       services.system_control();
-      services.get_cache();
+      this.g.dispatch("cache_api");
     }
   },
 };

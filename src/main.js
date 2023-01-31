@@ -18,6 +18,7 @@ const app = createApp(Page);
 
 app.config.globalProperties.services = services;
 app.config.globalProperties.bildir = bildir;
+app.config.globalProperties.g = store;
 
 app.use(store);
 app.use(router);

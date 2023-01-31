@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-
+import Global from "./global";
 export default createStore({
   state: {
     menu_state: false,
@@ -37,5 +37,5 @@ export default createStore({
     },
   },
   actions: {},
-  modules: {},
+  modules: { Global },
 });

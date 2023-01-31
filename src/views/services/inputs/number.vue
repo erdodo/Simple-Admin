@@ -18,14 +18,11 @@
 </template>
 
 <script>
-import services from "@/services";
 export default {
   props: ["modelValue", "clm", "enums"],
   data() {
     return {
       value: null,
-      lang_value: {},
-      langs_data: [],
     };
   },
   watch: {
@@ -38,14 +35,8 @@ export default {
   },
   mounted() {
     this.value = this.modelValue;
-    this.getLang();
   },
   methods: {
-    getLang() {
-      services.get_cache().then((res) => {
-        this.langs_data = res.tables.list.language;
-      });
-    },
     langChange() {
       this.value = JSON.stringify(this.lang_value);
       this.$emit("update:modelValue", this.value);

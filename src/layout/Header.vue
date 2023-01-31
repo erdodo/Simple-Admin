@@ -5,12 +5,13 @@
     ></el-button>
     <div></div>
     <div>
+      <el-button type="" @click="bildirim()">Test</el-button>
       <el-button plain size="large" circle @click="cacheClear()" v-tooltip="'Yedekleme yenile'">
         <i class="bi bi-eraser"></i>
       </el-button>
 
-      <el-button plain size="large" circle class="ms-2" v-tooltip="'Tema değiştir'" @click="changeTheme()">
-        <i v-if="dark_theme" class="bi bi-moon-stars-fill text-primary"></i>
+      <el-button plain size="large" circle class="ms-2" v-tooltip="'Tema değiştir'" @click="g.commit('changeTheme')">
+        <i v-if="g.getters.get_dark_theme" class="bi bi-moon-stars-fill text-primary"></i>
         <i v-else class="bi bi-brightness-high-fill"></i>
       </el-button>
       <el-dropdown>
@@ -32,32 +33,30 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
       dark_theme: true,
     };
   },
-  mounted() {
-    let localTheme = localStorage.getItem("theme");
-    this.dark_theme = localTheme == null || localTheme == "dark";
-  },
+
   methods: {
-    changeTheme() {
-      let newTheme = this.dark_theme ? "light" : "dark";
-      this.dark_theme = !this.dark_theme;
-      let html = document.getElementById("html");
-      html.className = newTheme;
-      html.attributes["data-bs-theme"].value = newTheme;
-      localStorage.setItem("theme", newTheme);
-    },
     logout() {
       this.services.auths.logout();
     },
     cacheClear() {
       localStorage.setItem("cache_status", "true");
       localStorage.removeItem("cache");
-      this.services.get_cache();
+      this.g.dispatch("cache_api");
+    },
+    bildirim() {
+      var config = {
+        headers: {
+          token: this.$store.getters.get_token,
+        },
+      };
+      axios.post("https://backend.erdoganyesil.com.tr/cron/send_notification", [], config);
     },
   },
 };

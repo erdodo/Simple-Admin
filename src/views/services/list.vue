@@ -12,6 +12,7 @@
         <el-button type="primary" @click="addComponent()">Ekle</el-button>
       </div>
     </div>
+
     <el-table
       v-loading="loading"
       :data="table_data.records"
@@ -92,7 +93,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="d-flex justify-content-between flex-wrap my-3 mb-5 pb-5">
+    <div class="d-flex justify-content-between flex-wrap my-3 mb-5">
       <el-pagination
         class="flex-wrap"
         v-model:current-page="table_params.page"
@@ -238,11 +239,9 @@ export default {
           this.table_params.like[k] = v;
         }
       }
-      console.log(this.table_params);
       this.getData();
     },
     sortable(clm) {
-      console.log(clm, this.table_params.sorts);
       if (this.table_params.sorts[clm] == undefined) {
         this.table_params.sorts[clm] = true;
       } else if (this.table_params.sorts[clm] == true) {

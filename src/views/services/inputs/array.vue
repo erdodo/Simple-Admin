@@ -8,14 +8,15 @@
     <template v-else>
       <el-select
         class="w-100"
-        v-model="value"
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
         multiple
         filterable
         allow-create
-        default-first-option
-        :reserve-keyword="false"
       >
-        <el-option v-for="(item, clm) in enums" :key="clm" :label="item.show" :value="clm" />
+        <template v-for="(item, clm) in enums" :key="clm">
+          <el-option :label="item.show" :value="clm" />
+        </template>
       </el-select>
     </template>
   </div>
@@ -31,7 +32,6 @@ export default {
   },
   watch: {
     value(v) {
-      console.log(this.clm.name, v);
       this.$emit("update:modelValue", v);
     },
     modelValue(v) {

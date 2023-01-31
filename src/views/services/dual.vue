@@ -7,10 +7,11 @@
     draggable
     v-loading="loading"
   >
-    <template v-for="clm in columns" :key="clm.name">
-      <inputs v-model="params[clm.name]" :modelValue="params[clm.name]" :params="params" :label="true" :clm="clm"></inputs>
-    </template>
-
+    <div v-if="loading == false">
+      <template v-for="clm in columns" :key="clm.name">
+        <inputs v-model="params[clm.name]" :modelValue="params[clm.name]" :params="params" :label="true" :clm="clm"></inputs>
+      </template>
+    </div>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -74,7 +75,9 @@ export default {
               params["old_" + key] = val;
               params[key] = null;
             } else if (this.columns[key]?.type == "array" || this.columns[key]?.type == "object") {
-              params[key] = JSON.parse(val);
+              if (val == "" || val == undefined || val == null) {
+                params[key] = {};
+              } else params[key] = JSON.parse(val);
             } else {
               params[key] = val;
             }
@@ -104,7 +107,6 @@ export default {
           }
         }
         services.add(this.$route.params.table_name, formData).then((res) => {
-          console.log(res);
           if (res.status == "success") {
             this.bildir.success("Başarıyla Eklendi");
             this.dialogVisible = false;

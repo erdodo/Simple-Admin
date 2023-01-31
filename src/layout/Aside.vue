@@ -5,7 +5,7 @@
         <img src="/vendor/img/Simple.png" style="width: 25px" alt="" />
         <template #title><span class="mx-3 fs-3">Simple</span></template>
       </el-menu-item>
-      <el-sub-menu v-for="m in menu" :key="m.id" :index="m.id">
+      <el-sub-menu v-for="m in get_cache.table_group" :key="m.id" :index="m.id">
         <template #title>
           <el-icon v-html="m.icon"></el-icon>
           <span>{{ m.display }}</span>
@@ -44,7 +44,7 @@
         <img src="/vendor/img/Simple.png" style="width: 25px" alt="" />
         <template #title><span class="mx-3 fs-3">Simple</span></template>
       </el-menu-item>
-      <el-sub-menu v-for="m in menu" :key="m.id" :index="m.id">
+      <el-sub-menu v-for="m in get_cache.table_group" :key="m.id" :index="m.id">
         <template #title>
           <el-icon><location /></el-icon>
           <span>{{ m.display }}</span>
@@ -63,6 +63,7 @@
         </template>
       </el-menu-item>
     </el-menu>
+    {{ get_cache }}
   </div>
 </template>
 
@@ -75,23 +76,17 @@ export default {
   data() {
     return {
       isCollapse: false,
-      menu: {},
     };
   },
   computed: {
-    ...mapGetters(["getMenuState"]),
+    ...mapGetters(["getMenuState", "get_cache"]),
   },
   watch: {
     $route() {
       this.$store.commit("setMenuState", false);
     },
   },
-  mounted() {
-    this.menu = JSON.parse(localStorage.getItem("cache"))?.table_group;
-    services.get_cache().then((res) => {
-      this.menu = res.table_group;
-    });
-  },
+  mounted() {},
 };
 </script>
 
