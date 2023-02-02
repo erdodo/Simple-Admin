@@ -28,12 +28,14 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["get_token"]),
+    ...mapGetters(["get_token", "get_cache"]),
   },
   mounted() {
     if (this.get_token) {
       services.system_control();
-      this.g.dispatch("cache_api");
+      if (this.empty(this.get_cache)) {
+        this.g.dispatch("cache_api");
+      }
     }
   },
 };

@@ -82,7 +82,7 @@ export default {
               params[key] = val;
             }
           }
-
+          console.log(params);
           setTimeout(() => {
             this.loading = false;
           }, 100);
@@ -102,6 +102,8 @@ export default {
             }
           } else if (clm?.type == "array" || clm.type == "object") {
             formData.append(clm.name, JSON.stringify(this.params[clm.name]));
+          } else if (clm?.type == "bool") {
+            formData.append(clm.name, this.params[clm.name] ? 1 : 0);
           } else {
             formData.append(clm.name, this.params[clm.name] == undefined ? "" : this.params[clm.name]);
           }
@@ -125,6 +127,8 @@ export default {
             }
           } else if (clm?.type == "array" || clm?.type == "object") {
             formData.append(clm.name, JSON.stringify(this.params[clm.name]));
+          } else if (clm?.type == "bool") {
+            formData.append(clm.name, this.params[clm.name] ? 1 : 0);
           } else {
             formData.append(clm.name, this.params[clm.name] == undefined ? "" : this.params[clm.name]);
           }

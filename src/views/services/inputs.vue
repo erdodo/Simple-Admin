@@ -1,6 +1,6 @@
 <template>
   <div class="my-1" v-tooltip="clm.description ? clm.description : null">
-    <label v-if="label">{{ clm.display }}:</label>
+    <b v-if="label">{{ clm.display }}:</b>
     <template v-if="clm.type == 'sort_text'">
       <sort-text
         :modelValue="modelValue"

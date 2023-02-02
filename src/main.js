@@ -19,6 +19,10 @@ const app = createApp(Page);
 app.config.globalProperties.services = services;
 app.config.globalProperties.bildir = bildir;
 app.config.globalProperties.g = store;
+app.config.globalProperties.empty = (val) => {
+  if (val == "" || val == null || val == undefined || val?.length <= 0 || val == "[]" || val == "{}") return true;
+  else return false;
+};
 
 app.use(store);
 app.use(router);

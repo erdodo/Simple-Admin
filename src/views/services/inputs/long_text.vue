@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="clm.enums != null">
+    <template v-if="!empty(clm.enums)">
       <el-select
         :modelValue="modelValue"
         @update:modelValue="$emit('update:modelValue', $event)"
@@ -13,7 +13,7 @@
         <el-option v-for="e in JSON.parse(clm.enums)" :key="e" :value="e"></el-option>
       </el-select>
     </template>
-    <template v-else-if="clm.relation_table != null">
+    <template v-else-if="!empty(clm.relation_table)">
       <el-select
         class="w-100"
         :modelValue="modelValue"
@@ -26,7 +26,7 @@
         </template>
       </el-select>
     </template>
-    <template v-else-if="clm.lang_support == '1'">
+    <div class="border-bottom pb-2 mb-2" v-else-if="clm.lang_support == '1'">
       <template class="d-flex" v-for="v in get_cache.tables.list.language" :key="v.name">
         <div class="d-flex align-items-center">
           <span class="text-nowrap col-2">{{ v.display }}: </span>
@@ -40,7 +40,7 @@
           ></el-input>
         </div>
       </template>
-    </template>
+    </div>
     <template v-else>
       <el-input v-model="value" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea" placeholder=""></el-input>
     </template>

@@ -35,7 +35,14 @@
       </template>
     </template>
     <template v-else>
-      <el-date-picker class="w-100" v-model="value" type="datetime" />
+      <el-date-picker
+        class="w-100"
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        type="datetime"
+        format="DD/MM/YYYY HH:mm:ss"
+        value-format="YYYY-MM-DD HH:mm:ss"
+      />
     </template>
   </div>
 </template>

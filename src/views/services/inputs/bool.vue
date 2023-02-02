@@ -1,6 +1,12 @@
 <template>
   <div class="inputs-float">
-    <el-switch v-model="value" inline-prompt :active-icon="Check" :inactive-icon="Close" />
+    <el-switch
+      :modelValue="modelValue"
+      @update:modelValue="$emit('update:modelValue', $event)"
+      inline-prompt
+      :active-icon="Check"
+      :inactive-icon="Close"
+    />
   </div>
 </template>
 
