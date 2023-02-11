@@ -1,8 +1,5 @@
 <template>
-  <div>
-    Home
-    <embed src="https://web.whatsapp.com/" type="" />
-  </div>
+  <div>Home</div>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="my-1" v-tooltip="clm.description ? clm.description : null">
+  <div class="my-1 mb-3" v-tooltip="clm.description ? clm.description : null">
     <b v-if="label">{{ clm.display }}:</b>
     <template v-if="clm.type == 'sort_text'">
       <sort-text
@@ -131,6 +131,7 @@ export default {
     if (this.clm.relation_table != null) {
       services.get_enums(this.$route.params.table_name, this.clm.name).then((res) => {
         this.enums = res.records;
+        console.log(res);
       });
     }
   },

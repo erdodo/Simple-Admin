@@ -1,5 +1,6 @@
 <template>
   <div class="app-body">
+    <div class="loading-page" v-if="get_cache.profile == undefined" v-loading="true"></div>
     <div class="">
       <el-container>
         <el-aside width="auto"><Aside></Aside></el-aside>
@@ -31,9 +32,10 @@ export default {
     ...mapGetters(["get_token", "get_cache"]),
   },
   mounted() {
+    console.log(this.get_token, this.get_cache);
     if (this.get_token) {
       services.system_control();
-      if (this.empty(this.get_cache)) {
+      if (this.empty(this.get_cache.profile)) {
         this.g.dispatch("cache_api");
       }
     }

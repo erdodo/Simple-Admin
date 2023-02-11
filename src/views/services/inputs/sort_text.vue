@@ -1,7 +1,6 @@
 <template>
   <div>
     <template v-if="!empty(clm.enums)">
-      enum?
       <el-select
         :modelValue="modelValue"
         @update:modelValue="$emit('update:modelValue', $event)"
@@ -15,7 +14,6 @@
       </el-select>
     </template>
     <template v-else-if="!empty(clm.relation_table)">
-      bura
       <el-select
         class="w-100"
         :modelValue="modelValue"
