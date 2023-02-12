@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-card class="my-3">
     <div class="d-flex justify-content-between my-3">
       <span class="fs-3">
         {{ table_data.table_info?.display }}
@@ -93,7 +93,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="d-flex justify-content-between flex-wrap my-3 mb-5">
+    <div class="d-flex justify-content-between flex-wrap my-3">
       <el-pagination
         class="flex-wrap"
         v-model:current-page="table_params.page"
@@ -133,7 +133,7 @@
     </div>
     <dual v-model:visible="dual_dialog_visible" :config="dual_config" @success="getData()"></dual>
     <detail v-model:visible="detail_dialog_visible" :config="detail_config"></detail>
-  </div>
+  </el-card>
 </template>
 
 <script>

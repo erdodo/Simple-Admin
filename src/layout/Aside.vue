@@ -5,14 +5,14 @@
         <img src="/vendor/img/Simple.png" style="width: 25px" alt="" />
         <template #title><span class="mx-3 fs-3">Simple</span></template>
       </el-menu-item>
-      <el-sub-menu v-for="m in get_cache.table_group" :key="m.id" :index="m.id">
+      <el-sub-menu v-for="(m, k) in get_cache.table_group" :key="k" :index="k">
         <template #title>
           <el-icon v-html="m.icon"></el-icon>
           <span>{{ m.display }}</span>
         </template>
 
-        <el-menu-item v-for="t in m.table_group_tables" :index="'/list/' + t.name" :key="t">
-          {{ t.display }}
+        <el-menu-item v-for="(t, k) in m.table_group_tables" :index="'/list/' + k" :key="k">
+          {{ t }}
         </el-menu-item>
       </el-sub-menu>
 
@@ -44,14 +44,14 @@
         <img src="/vendor/img/Simple.png" style="width: 25px" alt="" />
         <template #title><span class="mx-3 fs-3">Simple</span></template>
       </el-menu-item>
-      <el-sub-menu v-for="m in get_cache.table_group" :key="m.id" :index="m.id">
+      <el-sub-menu v-for="(m, k) in get_cache.table_group" :key="k" :index="k">
         <template #title>
-          <el-icon><location /></el-icon>
+          <el-icon v-html="m.icon"></el-icon>
           <span>{{ m.display }}</span>
         </template>
 
-        <el-menu-item v-for="t in m.table_group_tables" :index="'/list/' + t.name" :key="t">
-          {{ t.display }}
+        <el-menu-item v-for="t in m.table_group_tables" :index="'/list/' + t" :key="t">
+          {{ t }}
         </el-menu-item>
       </el-sub-menu>
 
@@ -63,7 +63,6 @@
         </template>
       </el-menu-item>
     </el-menu>
-    {{ get_cache }}
   </div>
 </template>
 

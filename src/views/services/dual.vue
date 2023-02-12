@@ -75,7 +75,8 @@ export default {
               params["old_" + key] = val;
               params[key] = null;
             } else if (this.columns[key]?.type == "array" || this.columns[key]?.type == "object") {
-              if (val == "" || val == undefined || val == null) {
+              console.log(val);
+              if (val == "" || val == undefined || val == null || val == "undefined") {
                 params[key] = {};
               } else params[key] = JSON.parse(val);
             } else {

@@ -23,7 +23,7 @@ html{
     
 }
 .light{
-    --el-fill-color-blank:rgba(255,255,255,0.4) !important;
+    --el-fill-color-blank:rgb(217 217 217 / 40%) !important;
     --bs-body-bg:rgba(223, 219, 210, 0.3) !important;
 }
 
