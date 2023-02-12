@@ -53,3 +53,6 @@ z-index: 3 !important;
     width: 100vw;
     height: 100vh;
 }
+.el-menu{
+    background-color: var(--bs-secondary-bg) !important;
+}

@@ -14,8 +14,8 @@
     </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="saveData()"> Confirm </el-button>
+        <el-button @click="dialogVisible = false">{{ tr("cancel") }}</el-button>
+        <el-button type="primary" @click="saveData()"> {{ tr("save") }} </el-button>
       </span>
     </template>
   </el-dialog>

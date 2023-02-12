@@ -10,6 +10,12 @@ import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import "element-plus/theme-chalk/dark/css-vars.css";
 import tr from "element-plus/dist/locale/tr.mjs";
+import en from "element-plus/dist/locale/en.mjs";
+let locale;
+let lang = store.getters.get_cache.profile.language_id.name;
+if (lang == "tr") locale = tr;
+if (lang == "en") locale = en;
+console.log(locale);
 
 import FloatingVue from "floating-vue";
 import "floating-vue/dist/style.css";
@@ -23,12 +29,15 @@ app.config.globalProperties.empty = (val) => {
   if (val == "" || val == null || val == undefined || val?.length <= 0 || val == "[]" || val == "{}") return true;
   else return false;
 };
+app.config.globalProperties.tr = (val) => {
+  return store.getters.get_cache.front_langs[val];
+};
 
 app.use(store);
 app.use(router);
 
 app.use(ElementPlus, {
-  locale: tr,
+  locale: locale,
 });
 app.use(FloatingVue);
 

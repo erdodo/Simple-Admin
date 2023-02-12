@@ -6,10 +6,10 @@
       </span>
       <div>
         <transition name="el-fade-in">
-          <el-button type="danger" v-show="selected_column_length > 0"> Sil</el-button>
+          <el-button type="danger" v-show="selected_column_length > 0"> {{ tr("delete") }}</el-button>
         </transition>
-        <el-button type="primary" @click="openFilter()">Filtreleme Seçenekleri</el-button>
-        <el-button type="primary" @click="addComponent()">Ekle</el-button>
+        <el-button type="primary" @click="openFilter()">{{ tr("filter_options") }}</el-button>
+        <el-button type="primary" @click="addComponent()">{{ tr("create") }}</el-button>
       </div>
     </div>
 
@@ -47,8 +47,8 @@
       <el-table-column :fixed="width > 500 ? 'right' : undefined" width="70">
         <template #header>
           <div class="d-flex flex-column">
-            <span class="text-nowrap">İşlem</span>
-            <el-button type="primary" @click="filterChange()" v-if="filter_show">Ara</el-button>
+            <span class="text-nowrap">#</span>
+            <el-button type="primary" @click="filterChange()" v-if="filter_show">{{ tr("search") }}</el-button>
           </div>
         </template>
         <template #default="scope">
@@ -58,7 +58,9 @@
               <el-dropdown-menu>
                 <el-dropdown-item @click="detailComponent(scope.row)">Detay</el-dropdown-item>
                 <el-dropdown-item @click="editComponent(scope.row)">Düzenle</el-dropdown-item>
-                <el-dropdown-item divided class="text-danger" @click="deleteEvent(scope.row.id)">Sil</el-dropdown-item>
+                <el-dropdown-item divided class="text-danger" @click="deleteEvent(scope.row.id)">{{
+                  tr("delete")
+                }}</el-dropdown-item>
                 <el-dropdown-item divided>
                   <div class="d-flex flex-column">
                     <el-tooltip
@@ -68,7 +70,7 @@
                       placement="left"
                     >
                       <div class="d-flex flex-column">
-                        <label>Ekleyen:</label>
+                        <label>{{ tr("own") }}:</label>
                         <span>{{ scope.row.own_id.name }} {{ scope.row.own_id.surname }}</span>
                       </div>
                     </el-tooltip>
@@ -81,7 +83,7 @@
                       placement="left"
                     >
                       <div class="d-flex flex-column">
-                        <label>Güncelleyen:</label>
+                        <label>{{ tr("updated") }}:</label>
                         <span>{{ scope.row.user_id.name }} {{ scope.row.user_id.surname }}</span>
                       </div>
                     </el-tooltip>
