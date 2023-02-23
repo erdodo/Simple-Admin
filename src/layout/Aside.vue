@@ -50,7 +50,7 @@
           <span>{{ m.display }}</span>
         </template>
 
-        <el-menu-item v-for="t in m.table_group_tables" :index="'/list/' + t" :key="t">
+        <el-menu-item v-for="(t, k) in m.table_group_tables" :index="'/list/' + k" :key="k">
           {{ t }}
         </el-menu-item>
       </el-sub-menu>

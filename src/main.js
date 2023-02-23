@@ -12,7 +12,7 @@ import "element-plus/theme-chalk/dark/css-vars.css";
 import tr from "element-plus/dist/locale/tr.mjs";
 import en from "element-plus/dist/locale/en.mjs";
 let locale;
-let lang = store.getters.get_cache.profile.language_id.name;
+let lang = store.getters.get_cache.profile?.language_id?.name ?? "tr";
 if (lang == "tr") locale = tr;
 if (lang == "en") locale = en;
 console.log(locale);
