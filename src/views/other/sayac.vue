@@ -9,17 +9,17 @@ export default {
   data() {
     return {
       dakika: 25,
-      saniye: 0,
+      saniye: 1,
     };
   },
   mounted() {
     let sayacInter = setInterval(() => {
       this.saniye--;
-      if (this.saniye == 0) {
+      if (this.saniye <= 0) {
         this.dakika--;
         this.saniye = 59;
       }
-      if (this.dakika == 0) {
+      if (this.dakika <= 0) {
         clearInterval(sayacInter);
       }
     }, 1000);
