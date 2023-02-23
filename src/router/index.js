@@ -2,6 +2,12 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
+    path: "/sayac",
+    component: function () {
+      return import("@/views/other/sayac.vue");
+    },
+  },
+  {
     path: "/",
     component: function () {
       return import("@/views/Home.vue");
