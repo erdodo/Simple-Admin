@@ -2,6 +2,7 @@
   <el-scrollbar height="100vh">
     <div class="position-relative">
       <app v-if="get_logged_in"></app>
+      <router-view v-else-if="$route.fullPath == '/sayac'"></router-view>
       <auths v-else></auths>
     </div>
   </el-scrollbar>
