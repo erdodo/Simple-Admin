@@ -1,11 +1,14 @@
 <template>
   <div class="">
-    <template v-if="clm.enums != null && clm.enums != 'null'">
+
+    <template v-if="clm.enums != null && clm.enums != 'null' && clm.enums != '[]'">
+      {{ clm }}
       <el-select v-model="value" placeholder="" multiple class="w-100">
         <el-option v-for="e in JSON.parse(clm.enums)" :key="e" :value="e"></el-option>
       </el-select>
     </template>
     <template v-else>
+
       <el-select
         class="w-100"
         :modelValue="modelValue"

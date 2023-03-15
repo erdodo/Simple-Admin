@@ -128,10 +128,11 @@ export default {
   },
   watch: {},
   mounted() {
-    if (this.clm.relation_table != null) {
+    if (this.clm.relation_table != null && this.clm.relation_table != "[]" && this.clm.relation_table != "") {
+      console.log(this.clm)
       services.get_enums(this.$route.params.table_name, this.clm.name).then((res) => {
         this.enums = res.records;
-        console.log(res);
+        console.log(this.clm.name,this.enums);
       });
     }
   },

@@ -27,14 +27,14 @@
       </el-select>
     </template>
     <div class="border-bottom pb-2 mb-2" v-else-if="clm.lang_support == '1'">
-      <template class="d-flex" v-for="v in get_cache.tables.list.language" :key="v.name">
+      <template class="d-flex" v-for="(v,k) in get_cache.language" :key="k">
         <div class="d-flex align-items-center">
-          <span class="text-nowrap col-2">{{ v.display }}: </span>
+          <span class="text-nowrap col-2">{{ v }}: </span>
           <el-input
             :autosize="{ minRows: 2, maxRows: 4 }"
             type="textarea"
             class="my-1"
-            v-model="lang_value[v.name]"
+            v-model="lang_value[k]"
             @keyup="langChange()"
             placeholder=""
           ></el-input>
