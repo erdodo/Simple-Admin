@@ -1,11 +1,13 @@
 <template>
   <div>
     <template v-if="clm.enums != null">
+      buras
       <el-select v-model="value" placeholder="" class="w-100">
         <el-option v-for="e in JSON.parse(clm.enums)" :key="e" :value="e"></el-option>
       </el-select>
     </template>
-    <template v-if="clm.relation_table != null">
+    <template v-else-if="clm.relation_table != null && clm.relation_table != ''">
+      bura
       <el-select v-model="value" placeholder="" class="w-100">
         <el-option v-for="(e, k) in enums" :key="k" :value="k" :label="e.show"></el-option>
       </el-select>

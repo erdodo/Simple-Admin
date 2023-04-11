@@ -48,6 +48,7 @@ export default {
         .then((res) => {
           localStorage.setItem("cache", JSON.stringify(res.data));
           store.commit("set_cache", res.data);
+          window.location.reload();
         })
         .catch(function (error) {
           console.log(error);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="params['old_' + clm.name] != null" class="d-flex my-2 align-items-center">
+    <div v-if="params[clm.name] != null" class="d-flex my-2 align-items-center">
       <template v-for="(i, k) in JSON.parse(params['old_' + clm.name])" :key="i">
         <img v-if="i.mini != ''" :src="i.mini_link" style="height: 35px" />
         <a v-else class="cursor-pointer fs-5" download :href="i.full_link"><i class="bi bi-cloud-download"></i></a>
